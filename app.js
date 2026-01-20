@@ -299,10 +299,48 @@ function init() {
     // Update UI every minute for any changes
     setInterval(updateUI, 60000);
 
+    // Initialize comparison slider
+    initComparisonSlider();
+
     console.log('🦷 Diş Plağı Takip Uygulaması başlatıldı!');
     console.log(`📊 Toplam ${CONFIG.totalAligners} plak, her ${CONFIG.daysPerAligner} günde bir değişim`);
     console.log(`📅 Başlangıç tarihi: ${formatDate(CONFIG.startDate)}`);
     console.log(`🏁 Tahmini bitiş: ${formatDate(getTreatmentEndDate())}`);
+}
+
+/**
+ * Initializes the comparison slider functionality
+ */
+function initComparisonSlider() {
+    const slider = document.getElementById('comparisonSlider');
+    const afterImg = document.getElementById('afterImg');
+    const comparisonText = document.getElementById('comparisonText');
+
+    if (!slider || !afterImg || !comparisonText) return;
+
+    // Set initial value to current aligner
+    const currentAligner = getCurrentAlignerNumber();
+    slider.value = currentAligner;
+
+    // Update comparison based on slider value
+    function updateComparison(value) {
+        const progress = (value - 1) / (CONFIG.totalAligners - 1);
+        const percent = Math.round(progress * 100);
+
+        // Update after image opacity based on progress
+        afterImg.style.opacity = progress;
+
+        // Update text
+        comparisonText.textContent = `Plak ${value} - %${percent} tamamlandı`;
+    }
+
+    // Initial update
+    updateComparison(currentAligner);
+
+    // Slider event listener
+    slider.addEventListener('input', (e) => {
+        updateComparison(parseInt(e.target.value));
+    });
 }
 
 // Start the app when DOM is ready

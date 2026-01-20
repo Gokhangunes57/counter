@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="tr">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -9,6 +10,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="styles.css">
 </head>
+
 <body>
     <div class="app-container">
         <!-- Animated Background -->
@@ -39,8 +41,8 @@
                 </div>
                 <div class="progress-ring-container">
                     <svg class="progress-ring" width="200" height="200">
-                        <circle class="progress-ring-bg" cx="100" cy="100" r="85"/>
-                        <circle class="progress-ring-fill" cx="100" cy="100" r="85" id="progressRing"/>
+                        <circle class="progress-ring-bg" cx="100" cy="100" r="85" />
+                        <circle class="progress-ring-fill" cx="100" cy="100" r="85" id="progressRing" />
                     </svg>
                     <div class="progress-percentage" id="progressPercent">11%</div>
                 </div>
@@ -87,6 +89,29 @@
                 </div>
             </section>
 
+            <!-- Visual Comparison Card -->
+            <section class="comparison-card glass-card">
+                <h2 class="section-title">🦷 Görsel İlerleme</h2>
+                <div class="comparison-container">
+                    <div class="comparison-wrapper">
+                        <img src="before.jpg" alt="Başlangıç" class="comparison-img before-img" id="beforeImg">
+                        <img src="after.jpg" alt="Son" class="comparison-img after-img" id="afterImg">
+                    </div>
+                    <div class="comparison-labels">
+                        <span class="comparison-label before-label">Başlangıç</span>
+                        <span class="comparison-label after-label">Son Durum</span>
+                    </div>
+                </div>
+                <div class="comparison-slider-container">
+                    <span class="slider-label">Plak 1</span>
+                    <input type="range" min="1" max="35" value="4" class="comparison-slider" id="comparisonSlider">
+                    <span class="slider-label">Plak 35</span>
+                </div>
+                <div class="comparison-info">
+                    <span id="comparisonText">Plak 4 - %11 tamamlandı</span>
+                </div>
+            </section>
+
             <!-- Stats Grid -->
             <section class="stats-grid">
                 <div class="stat-card glass-card">
@@ -114,7 +139,8 @@
             <!-- Motivational Message -->
             <section class="motivation-card glass-card">
                 <div class="motivation-icon">💪</div>
-                <p class="motivation-text" id="motivationText">Harika gidiyorsun! Her gün mükemmel gülüşe bir adım daha yaklaşıyorsun.</p>
+                <p class="motivation-text" id="motivationText">Harika gidiyorsun! Her gün mükemmel gülüşe bir adım daha
+                    yaklaşıyorsun.</p>
             </section>
         </main>
 
@@ -126,4 +152,5 @@
 
     <script src="app.js"></script>
 </body>
+
 </html>
