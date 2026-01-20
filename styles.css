@@ -3,41 +3,45 @@
    ===================================================== */
 
 :root {
-    /* Primary Colors */
-    --primary: #6366f1;
-    --primary-light: #818cf8;
-    --primary-dark: #4f46e5;
-    
-    /* Accent Colors */
-    --accent: #22d3ee;
-    --accent-glow: rgba(34, 211, 238, 0.3);
-    
-    /* Success/Progress */
-    --success: #10b981;
-    --success-light: #34d399;
-    
-    /* Background */
-    --bg-dark: #0f0f23;
-    --bg-gradient-start: #1a1a2e;
-    --bg-gradient-end: #16213e;
-    
+    /* Primary Colors - Hot Pink */
+    --primary: #ff6b9d;
+    --primary-light: #ff8fb8;
+    --primary-dark: #e84a7f;
+
+    /* Accent Colors - Sunny Orange & Yellow */
+    --accent: #ffb347;
+    --accent-glow: rgba(255, 179, 71, 0.4);
+
+    /* Success/Progress - Bright Teal */
+    --success: #00d4aa;
+    --success-light: #00f5c4;
+
+    /* Secondary Accent - Electric Purple */
+    --purple: #bf7dff;
+    --purple-light: #d4a3ff;
+
+    /* Background - Soft Gradient */
+    --bg-dark: #1a1a2e;
+    --bg-gradient-start: #2d1b4e;
+    --bg-gradient-end: #1a3a4a;
+
     /* Glass Effect */
-    --glass-bg: rgba(255, 255, 255, 0.05);
-    --glass-border: rgba(255, 255, 255, 0.1);
-    --glass-shadow: rgba(0, 0, 0, 0.3);
-    
+    --glass-bg: rgba(255, 255, 255, 0.08);
+    --glass-border: rgba(255, 255, 255, 0.15);
+    --glass-shadow: rgba(0, 0, 0, 0.25);
+
     /* Text */
     --text-primary: #ffffff;
-    --text-secondary: rgba(255, 255, 255, 0.7);
-    --text-muted: rgba(255, 255, 255, 0.5);
-    
+    --text-secondary: rgba(255, 255, 255, 0.85);
+    --text-muted: rgba(255, 255, 255, 0.6);
+
     /* Spacing */
     --spacing-xs: 0.5rem;
     --spacing-sm: 1rem;
     --spacing-md: 1.5rem;
     --spacing-lg: 2rem;
     --spacing-xl: 3rem;
-    
+
     /* Border Radius */
     --radius-sm: 12px;
     --radius-md: 20px;
@@ -89,7 +93,7 @@ body {
 .shape-1 {
     width: 400px;
     height: 400px;
-    background: var(--primary);
+    background: linear-gradient(135deg, #ff6b9d, #ff8fb8);
     top: -100px;
     right: -100px;
     animation-delay: 0s;
@@ -98,7 +102,7 @@ body {
 .shape-2 {
     width: 300px;
     height: 300px;
-    background: var(--accent);
+    background: linear-gradient(135deg, #ffb347, #ffd93d);
     bottom: 20%;
     left: -100px;
     animation-delay: -5s;
@@ -107,22 +111,27 @@ body {
 .shape-3 {
     width: 250px;
     height: 250px;
-    background: var(--success);
+    background: linear-gradient(135deg, #00d4aa, #bf7dff);
     bottom: -50px;
     right: 20%;
     animation-delay: -10s;
 }
 
 @keyframes float {
-    0%, 100% {
+
+    0%,
+    100% {
         transform: translate(0, 0) scale(1);
     }
+
     25% {
         transform: translate(30px, -30px) scale(1.05);
     }
+
     50% {
         transform: translate(-20px, 20px) scale(0.95);
     }
+
     75% {
         transform: translate(20px, 10px) scale(1.02);
     }
@@ -182,9 +191,12 @@ body {
 }
 
 @keyframes bounce {
-    0%, 100% {
+
+    0%,
+    100% {
         transform: translateY(0);
     }
+
     50% {
         transform: translateY(-10px);
     }
@@ -235,6 +247,7 @@ body {
     0% {
         background-position: -200% 0;
     }
+
     100% {
         background-position: 200% 0;
     }
@@ -266,9 +279,12 @@ body {
 }
 
 @keyframes pulse {
-    0%, 100% {
+
+    0%,
+    100% {
         opacity: 1;
     }
+
     50% {
         opacity: 0.8;
     }
@@ -354,7 +370,7 @@ body {
     display: flex;
     flex-direction: column;
     align-items: center;
-    background: rgba(99, 102, 241, 0.2);
+    background: linear-gradient(135deg, rgba(255, 107, 157, 0.2), rgba(255, 179, 71, 0.2));
     padding: var(--spacing-sm) var(--spacing-md);
     border-radius: var(--radius-sm);
     min-width: 60px;
@@ -381,9 +397,12 @@ body {
 }
 
 @keyframes blink {
-    0%, 100% {
+
+    0%,
+    100% {
         opacity: 1;
     }
+
     50% {
         opacity: 0.3;
     }
@@ -395,7 +414,7 @@ body {
     justify-content: center;
     gap: var(--spacing-xs);
     padding: var(--spacing-sm);
-    background: rgba(34, 211, 238, 0.1);
+    background: linear-gradient(135deg, rgba(255, 179, 71, 0.15), rgba(255, 217, 61, 0.15));
     border-radius: var(--radius-sm);
     color: var(--accent);
     font-weight: 500;
@@ -471,9 +490,12 @@ body {
 }
 
 @keyframes glow {
-    0%, 100% {
+
+    0%,
+    100% {
         box-shadow: 0 4px 15px var(--accent-glow);
     }
+
     50% {
         box-shadow: 0 4px 25px var(--accent-glow), 0 0 40px var(--accent-glow);
     }
@@ -541,12 +563,16 @@ body {
 }
 
 @keyframes wave {
-    0%, 100% {
+
+    0%,
+    100% {
         transform: rotate(0deg);
     }
+
     25% {
         transform: rotate(20deg);
     }
+
     75% {
         transform: rotate(-20deg);
     }
@@ -577,20 +603,20 @@ body {
     .aligner-number {
         font-size: 4rem;
     }
-    
+
     .time-unit {
         min-width: 50px;
         padding: var(--spacing-xs) var(--spacing-sm);
     }
-    
+
     .time-value {
         font-size: 1.4rem;
     }
-    
+
     .countdown {
         gap: 4px;
     }
-    
+
     .time-separator {
         font-size: 1.4rem;
     }

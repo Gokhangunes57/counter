@@ -48,7 +48,7 @@ function getCurrentAlignerNumber() {
     const timeDiff = now - CONFIG.startDate;
     const daysPassed = Math.floor(timeDiff / (1000 * 60 * 60 * 24));
     const alignerNumber = Math.floor(daysPassed / CONFIG.daysPerAligner) + CONFIG.startAligner;
-    
+
     // Clamp to valid range
     return Math.max(1, Math.min(alignerNumber, CONFIG.totalAligners));
 }
@@ -72,7 +72,7 @@ function getNextChangeDate() {
     if (currentAligner >= CONFIG.totalAligners) {
         return null; // Treatment complete
     }
-    
+
     const daysFromStart = currentAligner * CONFIG.daysPerAligner;
     const nextDate = new Date(CONFIG.startDate);
     nextDate.setDate(nextDate.getDate() + daysFromStart);
@@ -110,11 +110,11 @@ function formatShortDate(date) {
 function getTimeRemaining(targetDate) {
     const now = new Date();
     const diff = targetDate - now;
-    
+
     if (diff <= 0) {
         return { days: 0, hours: 0, minutes: 0, seconds: 0, total: 0 };
     }
-    
+
     return {
         total: diff,
         days: Math.floor(diff / (1000 * 60 * 60 * 24)),
@@ -129,7 +129,7 @@ function getTimeRemaining(targetDate) {
  */
 function getMotivationalMessage(currentAligner, totalAligners) {
     const progress = currentAligner / totalAligners;
-    
+
     if (progress >= 0.9) {
         return "Son düzlüktesin! Mükemmel gülüşüne çok az kaldı! 🏁";
     } else if (progress >= 0.75) {
@@ -155,33 +155,33 @@ function updateUI() {
     const currentAligner = getCurrentAlignerNumber();
     const nextChangeDate = getNextChangeDate();
     const endDate = getTreatmentEndDate();
-    
+
     // Update current aligner number
     document.getElementById('currentAligner').textContent = currentAligner;
-    
+
     // Update progress percentage
     const progressPercent = Math.round((currentAligner / CONFIG.totalAligners) * 100);
     document.getElementById('progressPercent').textContent = `${progressPercent}%`;
-    
+
     // Update progress ring
     updateProgressRing(progressPercent);
-    
+
     // Update stats
     document.getElementById('completedAligners').textContent = currentAligner - 1;
     document.getElementById('remainingAligners').textContent = CONFIG.totalAligners - currentAligner;
     document.getElementById('totalDays').textContent = CONFIG.totalAligners * CONFIG.daysPerAligner;
     document.getElementById('endDate').textContent = formatShortDate(endDate);
-    
+
     // Update next change date
     if (nextChangeDate) {
         document.getElementById('nextChangeDate').textContent = formatDate(nextChangeDate);
     } else {
         document.getElementById('nextChangeDate').textContent = "Tedavi Tamamlandı! 🎉";
     }
-    
+
     // Update motivation text
     document.getElementById('motivationText').textContent = getMotivationalMessage(currentAligner, CONFIG.totalAligners);
-    
+
     // Generate timeline
     generateTimeline(currentAligner);
 }
@@ -193,10 +193,10 @@ function updateProgressRing(percent) {
     const ring = document.getElementById('progressRing');
     const circumference = 2 * Math.PI * 85; // r = 85
     const offset = circumference - (percent / 100) * circumference;
-    
+
     // Add SVG gradient if not exists
     addSVGGradient();
-    
+
     ring.style.strokeDasharray = `${circumference}`;
     ring.style.strokeDashoffset = offset;
 }
@@ -207,13 +207,13 @@ function updateProgressRing(percent) {
 function addSVGGradient() {
     const svg = document.querySelector('.progress-ring');
     if (svg.querySelector('defs')) return;
-    
+
     const defs = document.createElementNS('http://www.w3.org/2000/svg', 'defs');
     defs.innerHTML = `
         <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="0%">
-            <stop offset="0%" style="stop-color:#6366f1"/>
-            <stop offset="50%" style="stop-color:#22d3ee"/>
-            <stop offset="100%" style="stop-color:#10b981"/>
+            <stop offset="0%" style="stop-color:#ff6b9d"/>
+            <stop offset="50%" style="stop-color:#ffb347"/>
+            <stop offset="100%" style="stop-color:#00d4aa"/>
         </linearGradient>
     `;
     svg.insertBefore(defs, svg.firstChild);
@@ -224,7 +224,7 @@ function addSVGGradient() {
  */
 function updateCountdown() {
     const nextChangeDate = getNextChangeDate();
-    
+
     if (!nextChangeDate) {
         document.getElementById('days').textContent = '0';
         document.getElementById('hours').textContent = '0';
@@ -232,14 +232,14 @@ function updateCountdown() {
         document.getElementById('seconds').textContent = '0';
         return;
     }
-    
+
     const timeRemaining = getTimeRemaining(nextChangeDate);
-    
+
     document.getElementById('days').textContent = timeRemaining.days;
     document.getElementById('hours').textContent = String(timeRemaining.hours).padStart(2, '0');
     document.getElementById('minutes').textContent = String(timeRemaining.minutes).padStart(2, '0');
     document.getElementById('seconds').textContent = String(timeRemaining.seconds).padStart(2, '0');
-    
+
     // Check if we need to update UI (new aligner day)
     if (timeRemaining.total === 0) {
         setTimeout(updateUI, 1000);
@@ -252,12 +252,12 @@ function updateCountdown() {
 function generateTimeline(currentAligner) {
     const timeline = document.getElementById('timeline');
     timeline.innerHTML = '';
-    
+
     for (let i = 1; i <= CONFIG.totalAligners; i++) {
         const item = document.createElement('div');
         item.className = 'timeline-item';
         item.textContent = i;
-        
+
         if (i < currentAligner) {
             item.classList.add('completed');
             item.title = 'Tamamlandı ✓';
@@ -271,10 +271,10 @@ function generateTimeline(currentAligner) {
             alignerDate.setDate(alignerDate.getDate() + ((i - 1) * CONFIG.daysPerAligner));
             item.title = `${formatDate(alignerDate)}`;
         }
-        
+
         timeline.appendChild(item);
     }
-    
+
     // Scroll to current aligner
     setTimeout(() => {
         const currentItem = timeline.querySelector('.current');
@@ -291,14 +291,14 @@ function generateTimeline(currentAligner) {
 function init() {
     // Initial UI update
     updateUI();
-    
+
     // Start countdown timer
     updateCountdown();
     setInterval(updateCountdown, 1000);
-    
+
     // Update UI every minute for any changes
     setInterval(updateUI, 60000);
-    
+
     console.log('🦷 Diş Plağı Takip Uygulaması başlatıldı!');
     console.log(`📊 Toplam ${CONFIG.totalAligners} plak, her ${CONFIG.daysPerAligner} günde bir değişim`);
     console.log(`📅 Başlangıç tarihi: ${formatDate(CONFIG.startDate)}`);
