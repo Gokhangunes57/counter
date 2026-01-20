@@ -300,7 +300,7 @@ function init() {
     setInterval(updateUI, 60000);
 
     // Initialize comparison slider
-    initComparisonSlider();
+    init3DSimulation();
 
     console.log('🦷 Diş Plağı Takip Uygulaması başlatıldı!');
     console.log(`📊 Toplam ${CONFIG.totalAligners} plak, her ${CONFIG.daysPerAligner} günde bir değişim`);
@@ -309,38 +309,133 @@ function init() {
 }
 
 /**
- * Initializes the comparison slider functionality
+ * 3D Simulation Controller - Before/After Morph
  */
-function initComparisonSlider() {
-    const slider = document.getElementById('comparisonSlider');
-    const afterImg = document.getElementById('afterImg');
-    const comparisonText = document.getElementById('comparisonText');
+function init3DSimulation() {
+    // Elements
+    const slider = document.getElementById('simulationSlider');
+    const playPauseBtn = document.getElementById('playPauseBtn');
+    const playPauseIcon = document.getElementById('playPauseIcon');
+    const prevBtn = document.getElementById('prevBtn');
+    const nextBtn = document.getElementById('nextBtn');
+    const playBtn = document.getElementById('playBtn');
+    const stageBadge = document.getElementById('stageBadge');
+    const progressFill = document.getElementById('simProgressFill');
+    const progressThumb = document.getElementById('simProgressThumb');
+    const currentStageText = document.getElementById('currentStageText');
+    const realProgressText = document.getElementById('realProgressText');
+    const afterMorph = document.getElementById('afterMorph');
 
-    if (!slider || !afterImg || !comparisonText) return;
+    if (!slider || !afterMorph) return;
 
-    // Set initial value to current aligner
-    const currentAligner = getCurrentAlignerNumber();
-    slider.value = currentAligner;
+    // State
+    let isPlaying = false;
+    let animationInterval = null;
 
-    // Update comparison based on slider value
-    function updateComparison(value) {
-        const progress = (value - 1) / (CONFIG.totalAligners - 1);
-        const percent = Math.round(progress * 100);
+    // Update display based on aligner number
+    function updateDisplay(alignerNum) {
+        // Calculate progress (0 to 1)
+        const progress = (alignerNum - 1) / (CONFIG.totalAligners - 1);
+        const progressPercent = progress * 100;
 
-        // Update after image opacity based on progress
-        afterImg.style.opacity = progress;
+        // Update slider
+        slider.value = alignerNum;
 
-        // Update text
-        comparisonText.textContent = `Plak ${value} - %${percent} tamamlandı`;
+        // Update progress bar
+        progressFill.style.width = `${progressPercent}%`;
+        progressThumb.style.left = `${progressPercent}%`;
+
+        // Update stage badge
+        stageBadge.textContent = `Plak ${alignerNum}/35`;
+
+        // Update morph opacity - this creates the smooth transition effect
+        afterMorph.style.opacity = progress;
+
+        // Update text with stage description
+        let stageName;
+        if (alignerNum <= 7) {
+            stageName = 'Başlangıç';
+        } else if (alignerNum <= 14) {
+            stageName = 'Erken Tedavi';
+        } else if (alignerNum <= 21) {
+            stageName = 'Orta Tedavi';
+        } else if (alignerNum <= 28) {
+            stageName = 'İleri Tedavi';
+        } else {
+            stageName = 'Son Durum';
+        }
+        currentStageText.textContent = `Plak ${alignerNum} - ${stageName}`;
+
+        // Update real progress
+        const currentAligner = getCurrentAlignerNumber();
+        const realPercent = Math.round((currentAligner / CONFIG.totalAligners) * 100);
+        realProgressText.textContent = `Plak ${currentAligner} - %${realPercent}`;
     }
 
-    // Initial update
-    updateComparison(currentAligner);
+    // Animation functions
+    function startAnimation() {
+        if (isPlaying) return;
+        isPlaying = true;
+        playPauseIcon.textContent = '⏸';
 
-    // Slider event listener
+        let currentValue = parseInt(slider.value);
+
+        animationInterval = setInterval(() => {
+            currentValue++;
+            if (currentValue > CONFIG.totalAligners) {
+                currentValue = 1;
+            }
+            updateDisplay(currentValue);
+        }, 200); // 200ms per frame for smooth animation
+    }
+
+    function stopAnimation() {
+        if (!isPlaying) return;
+        isPlaying = false;
+        playPauseIcon.textContent = '▶';
+
+        if (animationInterval) {
+            clearInterval(animationInterval);
+            animationInterval = null;
+        }
+    }
+
+    function toggleAnimation() {
+        if (isPlaying) {
+            stopAnimation();
+        } else {
+            startAnimation();
+        }
+    }
+
+    function goToPrev() {
+        stopAnimation();
+        let val = parseInt(slider.value) - 5;
+        if (val < 1) val = 1;
+        updateDisplay(val);
+    }
+
+    function goToNext() {
+        stopAnimation();
+        let val = parseInt(slider.value) + 5;
+        if (val > CONFIG.totalAligners) val = CONFIG.totalAligners;
+        updateDisplay(val);
+    }
+
+    // Event listeners
     slider.addEventListener('input', (e) => {
-        updateComparison(parseInt(e.target.value));
+        stopAnimation();
+        updateDisplay(parseInt(e.target.value));
     });
+
+    playPauseBtn.addEventListener('click', toggleAnimation);
+    playBtn.addEventListener('click', toggleAnimation);
+    prevBtn.addEventListener('click', goToPrev);
+    nextBtn.addEventListener('click', goToNext);
+
+    // Initialize with current aligner
+    const currentAligner = getCurrentAlignerNumber();
+    updateDisplay(currentAligner);
 }
 
 // Start the app when DOM is ready

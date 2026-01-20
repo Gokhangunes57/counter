@@ -4,7 +4,21 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Diş Plağı Takip</title>
+    <meta name="theme-color" content="#00D9A5">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Melisa">
+    <title>Melisa - Diş Plağı Takip</title>
+
+    <!-- PWA Manifest -->
+    <link rel="manifest" href="manifest.json">
+
+    <!-- Icons -->
+    <link rel="icon" type="image/png" sizes="512x512" href="icon-512.png">
+    <link rel="apple-touch-icon" sizes="512x512" href="icon-512.png">
+    <link rel="apple-touch-icon" sizes="192x192" href="icon-192.png">
+
+    <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -89,26 +103,72 @@
                 </div>
             </section>
 
-            <!-- Visual Comparison Card -->
-            <section class="comparison-card glass-card">
-                <h2 class="section-title">🦷 Görsel İlerleme</h2>
-                <div class="comparison-container">
-                    <div class="comparison-wrapper">
-                        <img src="before.jpg" alt="Başlangıç" class="comparison-img before-img" id="beforeImg">
-                        <img src="after.jpg" alt="Son" class="comparison-img after-img" id="afterImg">
+            <!-- 3D Dental Simulation -->
+            <section class="simulation-card glass-card">
+                <h2 class="section-title">🦷 3D Tedavi Simülasyonu</h2>
+
+                <!-- 3D Viewer -->
+                <div class="viewer-3d" id="viewer3d">
+                    <div class="model-container" id="modelContainer">
+                        <img src="before.png" alt="Başlangıç" class="morph-img before-morph" id="beforeMorph">
+                        <img src="after.png" alt="Son" class="morph-img after-morph" id="afterMorph">
                     </div>
-                    <div class="comparison-labels">
-                        <span class="comparison-label before-label">Başlangıç</span>
-                        <span class="comparison-label after-label">Son Durum</span>
+
+                    <!-- Play/Pause overlay -->
+                    <div class="viewer-overlay">
+                        <button class="play-btn" id="playBtn">
+                            <span class="play-icon">▶</span>
+                        </button>
+                    </div>
+
+                    <!-- Stage indicator -->
+                    <div class="stage-indicator">
+                        <span class="stage-badge" id="stageBadge">Plak 1-7</span>
                     </div>
                 </div>
-                <div class="comparison-slider-container">
+
+                <!-- Progress bar -->
+                <div class="simulation-progress">
+                    <div class="progress-track">
+                        <div class="progress-fill" id="simProgressFill"></div>
+                        <div class="progress-thumb" id="simProgressThumb"></div>
+                    </div>
+                    <div class="progress-labels">
+                        <span>Başlangıç</span>
+                        <span>Son</span>
+                    </div>
+                </div>
+
+                <!-- Controls -->
+                <div class="simulation-controls">
+                    <button class="control-btn" id="prevBtn" title="Önceki">
+                        <span>⏮</span>
+                    </button>
+                    <button class="control-btn play-pause" id="playPauseBtn" title="Oynat/Durdur">
+                        <span id="playPauseIcon">▶</span>
+                    </button>
+                    <button class="control-btn" id="nextBtn" title="Sonraki">
+                        <span>⏭</span>
+                    </button>
+                </div>
+
+                <!-- Slider -->
+                <div class="simulation-slider-container">
                     <span class="slider-label">Plak 1</span>
-                    <input type="range" min="1" max="35" value="4" class="comparison-slider" id="comparisonSlider">
+                    <input type="range" min="1" max="35" value="1" class="simulation-slider" id="simulationSlider">
                     <span class="slider-label">Plak 35</span>
                 </div>
-                <div class="comparison-info">
-                    <span id="comparisonText">Plak 4 - %11 tamamlandı</span>
+
+                <!-- Info -->
+                <div class="simulation-info">
+                    <div class="info-row">
+                        <span class="info-label">Şu anki görüntü:</span>
+                        <span class="info-value" id="currentStageText">Plak 1 - Başlangıç</span>
+                    </div>
+                    <div class="info-row highlight">
+                        <span class="info-label">Gerçek ilerleme:</span>
+                        <span class="info-value" id="realProgressText">Plak 4 - %11</span>
+                    </div>
                 </div>
             </section>
 
