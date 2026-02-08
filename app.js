@@ -27,21 +27,47 @@ let alignerHistory = [];
  * API'den plak geçmişini getir
  */
 async function fetchAlignerHistory() {
+    // Başlangıç verileri (ilk kez çalıştırıldığında)
+    const initialData = [
+        { aligner: 1, date: '2025-12-21T18:00:00' },
+        { aligner: 2, date: '2025-12-31T18:00:00' },
+        { aligner: 3, date: '2026-01-10T18:00:00' },
+        { aligner: 4, date: '2026-01-20T18:00:00' },
+        { aligner: 5, date: '2026-01-30T18:00:00' },
+        { aligner: 6, date: '2026-02-09T18:00:00' }
+    ];
+
     try {
         const response = await fetch(CONFIG.apiUrl);
         if (!response.ok) throw new Error('API hatası');
         const data = await response.json();
-        alignerHistory = data.map(item => ({
-            aligner: item.aligner,
-            date: item.date
-        }));
+
+        // Eğer veritabanı boşsa başlangıç verilerini ekle
+        if (data.length === 0) {
+            for (const item of initialData) {
+                await fetch(CONFIG.apiUrl, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(item)
+                });
+            }
+            alignerHistory = initialData;
+        } else {
+            alignerHistory = data.map(item => ({
+                aligner: item.aligner,
+                date: item.date
+            }));
+        }
         return alignerHistory;
     } catch (error) {
         console.error('Geçmiş yüklenemedi:', error);
-        // Fallback: localStorage'dan oku
+        // Fallback: localStorage'dan oku veya başlangıç verilerini kullan
         const stored = localStorage.getItem('alignerHistory');
         if (stored) {
             alignerHistory = JSON.parse(stored);
+        } else {
+            alignerHistory = initialData;
+            localStorage.setItem('alignerHistory', JSON.stringify(initialData));
         }
         return alignerHistory;
     }
