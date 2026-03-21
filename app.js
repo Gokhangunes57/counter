@@ -18,6 +18,8 @@ const CONFIG = {
 
 // Bellekte tutulan geçmiş (API'den yüklenir)
 let alignerHistory = [];
+let countdownReachedZero = false;
+let isInitialLoad = true;
 
 // =====================================================
 // API Functions
@@ -505,6 +507,8 @@ function addSVGGradient() {
  */
 function updateCountdown() {
     const nextChangeDate = getNextChangeDate();
+    const timerCard = document.querySelector('.timer-card');
+    const countdownEl = document.getElementById('countdown');
 
     if (!nextChangeDate) {
         document.getElementById('days').textContent = '0';
@@ -521,9 +525,29 @@ function updateCountdown() {
     document.getElementById('minutes').textContent = String(timeRemaining.minutes).padStart(2, '0');
     document.getElementById('seconds').textContent = String(timeRemaining.seconds).padStart(2, '0');
 
-    // Yeni plak günü ise UI'ı güncelle
+    // Süre dolduğunda bildirim göster ama scrollIntoView tetikleme
     if (timeRemaining.total === 0) {
-        setTimeout(updateUI, 1000);
+        if (!countdownReachedZero) {
+            countdownReachedZero = true;
+            timerCard.classList.add('time-up');
+
+            // "Plak Değişimi Zamanı" bildirimi ekle
+            let notification = timerCard.querySelector('.time-up-notification');
+            if (!notification) {
+                notification = document.createElement('div');
+                notification.className = 'time-up-notification';
+                notification.innerHTML = '🎉 Plak Değişimi Zamanı!';
+                timerCard.appendChild(notification);
+            }
+        }
+    } else {
+        // Süre tekrar başlarsa temizle
+        if (countdownReachedZero) {
+            countdownReachedZero = false;
+            timerCard.classList.remove('time-up');
+            const notification = timerCard.querySelector('.time-up-notification');
+            if (notification) notification.remove();
+        }
     }
 }
 
@@ -565,13 +589,16 @@ function generateTimeline(currentAligner) {
         timeline.appendChild(item);
     }
 
-    // Şu anki plağa scroll
-    setTimeout(() => {
-        const currentItem = timeline.querySelector('.current');
-        if (currentItem) {
-            currentItem.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
-        }
-    }, 100);
+    // Sadece ilk yüklemede şu anki plağa scroll yap
+    if (isInitialLoad) {
+        isInitialLoad = false;
+        setTimeout(() => {
+            const currentItem = timeline.querySelector('.current');
+            if (currentItem) {
+                currentItem.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
+            }
+        }, 100);
+    }
 }
 
 // =====================================================
